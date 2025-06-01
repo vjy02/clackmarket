@@ -1,10 +1,46 @@
-import { AuthButton } from "@/components/depreceate/auth-button";
-import { hasEnvVars } from "@/lib/utils";
-import logo from "@/public/logo.svg";
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
 import Link from "next/link";
+import logo from "@/public/logo.svg";
+import { LoginButton } from "./LoginButton";
+import { LogoutButton } from "./LogoutButton";
+import { User } from "@supabase/supabase-js";
+import { CircleUser, LogOut } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 export const Navbar = () => {
+  const supabase = createClient();
+  const [user, setUser] = useState<User | null>(null);
+  const [flyoutClicked, setFlyoutClicked] = useState<boolean>(false);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      setIsAuthChecked(true);
+    });
+  
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        setIsAuthChecked(true); // also mark checked on auth state change
+      }
+    );
+  
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
+  }, [supabase]);
+
   return (
     <header className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -20,7 +56,7 @@ export const Navbar = () => {
               <h1 className="text-2xl font-bold font-mono">ClackMarket</h1>
             </div>
           </Link>
-          <nav className="hidden md:flex space-x-6 items-center text-sm">
+          <nav className="hidden md:flex space-x-6 items-center text-sm text-gray-700">
             <Link
               href="/"
               className="text-gray-700 hover:text-amber-600 transition-colors"
@@ -45,10 +81,38 @@ export const Navbar = () => {
             >
               List
             </Link>
-            {hasEnvVars ? <AuthButton /> : null}
+            {isAuthChecked ? (
+  user ? (
+              <DropdownMenu modal={false} onOpenChange={()=>setFlyoutClicked(!flyoutClicked)}>
+                <DropdownMenuTrigger className="focus:outline-none">
+                  <CircleUser className={`h-6 w-6 text-gray-700 hover:text-cyan-600 cursor-pointer ${flyoutClicked && "text-cyan-600"}`} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48">
+                  <DropdownMenuItem asChild className="hover:cursor-pointer">
+                    <Link href="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="hover:cursor-pointer">
+                    <Link href="/settings">Settings</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild className="hover:cursor-pointer">
+                    <div>
+                    <LogOut />
+                    <LogoutButton />
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <LoginButton />
+            )) : (
+              <CircleUser className="h-6 w-6 text-gray-700" />
+            )}
           </nav>
         </div>
       </div>
     </header>
   );
 };
+
+export default Navbar;

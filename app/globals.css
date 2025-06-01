@@ -7,6 +7,13 @@ html {
 }
 
 @layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+  html body[data-scroll-locked] {
+    overflow-y: scroll !important;
+    margin-right: 0px !important;
+  }
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;

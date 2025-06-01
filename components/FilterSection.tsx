@@ -38,7 +38,7 @@ export const FilterSection = ({ filters, setFilters }: FilterSectionProps) => {
     filters.priceRange[0] > 0 || filters.priceRange[1] < 1000;
 
   return (
-    <Card className="sticky top-24 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+    <Card className="sticky top-24 shadow-lg border-0 bg-white/80 backdrop-blur-sm" >
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold text-gray-900">Filters</CardTitle>
@@ -47,7 +47,7 @@ export const FilterSection = ({ filters, setFilters }: FilterSectionProps) => {
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-500 hover:text-gray-700 absolute right-4"
             >
               <X className="w-4 h-4 mr-1" />
               Clear
