@@ -32,7 +32,7 @@ export const Navbar = () => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
-        setIsAuthChecked(true); // also mark checked on auth state change
+        setIsAuthChecked(true); 
       }
     );
   

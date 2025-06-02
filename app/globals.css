@@ -67,6 +67,14 @@ html {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+  .no-border {
+    border: none;
+    outline: none;
+  }
+  .no-border:focus {
+    border: none;
+    outline: none;
+  }
 }
 
 @layer base {
