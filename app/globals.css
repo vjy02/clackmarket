@@ -7,9 +7,6 @@ html {
 }
 
 @layer base {
-  html {
-    scrollbar-gutter: stable;
-  }
   html body[data-scroll-locked] {
     overflow-y: scroll !important;
     margin-right: 0px !important;
@@ -67,14 +64,20 @@ html {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-  .no-border {
-    border: none;
-    outline: none;
-  }
-  .no-border:focus {
-    border: none;
-    outline: none;
-  }
+.no-border {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-clip: padding-box;
+}
+
+.no-border:focus,
+.no-border:active,
+.no-border:hover {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
 }
 
 @layer base {

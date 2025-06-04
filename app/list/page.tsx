@@ -81,23 +81,35 @@ const CreateListings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <main className="container mx-auto px-4 py-12 relative">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="h-[93vh] bg-gradient-to-br from-slate-50 to-slate-100">
+      <main className="w-10/12 mx-auto px-4 py-12 relative">
+        <div className="mb-8 flex flex-col md:flex-row  items-center md:gap-16">
+          <div>
+          <h1 className="text-3xl text-gray-900 mb-2 font-extrabold">
             Create Listings
           </h1>
           <p className="text-gray-600">
             Create and manage your product listings before publishing them to
             the marketplace.
           </p>
+          </div>
+          <div className="mb-6">
+            {listings.length > 0 && (
+              <div className="mt-8 flex justify-center">
+                <Button onClick={submitAllListings} size="lg" className="px-8">
+                  Publish All Listings ({listings.length})
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Listings Grid */}
           <div className="xl:col-span-3">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <AddListingCard onAddListing={addListing} />
+                                      <AddListingCard onAddListing={addListing} />
+
               {listings.map((listing) => (
                 <ListingCard
                   key={listing.id}
@@ -107,17 +119,6 @@ const CreateListings = () => {
                 />
               ))}
             </div>
-          </div>
-
-          {/* Seller Profile Sidebar */}
-          <div className="absolute right-0">
-            {listings.length > 0 && (
-              <div className="mt-8 flex justify-center">
-                <Button onClick={submitAllListings} size="lg" className="px-8">
-                  Publish All Listings ({listings.length})
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       </main>

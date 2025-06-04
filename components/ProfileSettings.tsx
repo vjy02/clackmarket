@@ -279,22 +279,11 @@ export default function ProfileSettings({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            Seller Profile Setup
-          </h1>
-          <p className="text-slate-600">
-            Configure your contact information, shipping locations, and payment
-            methods accepted.
-          </p>
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Contact Information Card */}
-          <Card className="shadow-sm border-0 bg-white/70 backdrop-blur-sm">
+          <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
+              <CardTitle className="flex items-center gap-3 text-lg">
                 <User className="w-5 h-5 text-blue-600" />
                 Contact Information
               </CardTitle>
@@ -342,7 +331,6 @@ export default function ProfileSettings({
                       <Select
                         value={countryCode}
                         onValueChange={setCountryCode}
-                
                       >
                         <SelectTrigger className="w-full border-slate-200 focus:border-blue-500 focus:ring-blue-500">
                           <SelectValue>
@@ -434,9 +422,9 @@ export default function ProfileSettings({
           </Card>
 
           {/* Shipping Locations Card */}
-          <Card className="shadow-sm border-0 bg-white/70 backdrop-blur-sm">
+          <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
+              <CardTitle className="flex items-center gap-3 text-lg">
                 <Package className="w-5 h-5 text-green-600" />
                 Shipping Locations
               </CardTitle>
@@ -494,7 +482,7 @@ export default function ProfileSettings({
 
                           {!loc.isGlobal && (
                             <div className="grid md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
+                              <div className="space-y-2 relative">
                                 <Label className="text-sm font-medium text-slate-700">
                                   Country
                                 </Label>
@@ -507,6 +495,8 @@ export default function ProfileSettings({
                                     )
                                   }
                                   placeHolder="Select Country"
+                                  containerClassName="no-border"
+                                  inputClassName="no-border"
                                 />
                               </div>
                               {loc.countryId && (
@@ -524,6 +514,8 @@ export default function ProfileSettings({
                                       )
                                     }
                                     placeHolder="Select State"
+                                    containerClassName="no-border"
+                                    inputClassName="no-border"
                                   />
                                 </div>
                               )}
@@ -567,9 +559,9 @@ export default function ProfileSettings({
           </Card>
 
           {/* Payment Methods Card */}
-          <Card className="shadow-sm border-0 bg-white/70 backdrop-blur-sm">
+          <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
+              <CardTitle className="flex items-center gap-3 text-lg">
                 <CreditCard className="w-5 h-5 text-purple-600" />
                 Payment Methods
               </CardTitle>
@@ -648,7 +640,7 @@ export default function ProfileSettings({
           </Card>
 
           {/* Action Buttons */}
-          <Card className="shadow-sm border-0 bg-white/70 backdrop-blur-sm">
+          <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
             <CardContent className="pt-6">
               <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
                 <Button

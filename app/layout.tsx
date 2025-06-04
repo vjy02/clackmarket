@@ -4,14 +4,39 @@ import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  metadataBase: new URL(
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"
+  ),
+  title: "ClackMarket - r/mechmarket Alernative and Keyboard Marketplace",
+  description:
+    "ClackMarket is the r/mechmarket alternative — a community-powered marketplace to buy and sell mechanical keyboards, keycaps, artisan keycaps, switches, and custom keyboard gear. List items for free and explore the best destination for keyboard enthusiasts.",
+  keywords: [
+    "clackmarket",
+    "keyboard",
+    "marketplace",
+    "mechanical keyboard",
+    "mechanical keyboard marketplace",
+    "gaming keyboard",
+    "keycap",
+    "mechmarket",
+    "reddit",
+    "mechmarket reddit",
+    "mechmarket",
+    "keyboard marketplace",
+    "keychron second hand",
+  ],
+  manifest: "/manifest.webmanifest",
+  viewport:
+    "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+  },
 };
 
 const geistSans = Geist({
@@ -27,7 +52,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className={`${geistSans.className} antialiased `}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
