@@ -24,10 +24,9 @@ export interface SellerInfo {
   address: string;
   paymentMethods: string[];
   discord: string;
-  username: string;
 }
 
-const CreateListings = () => {
+const MyListings = () => {
   const [listings, setListings] = useState<Listing[]>([]);
   const [sellerInfo, setSellerInfo] = useState<SellerInfo>({
     name: "John Doe",
@@ -36,15 +35,8 @@ const CreateListings = () => {
     address: "123 Main St, City, State 12345",
     paymentMethods: ["PayPal", "Bank Transfer"],
   });
-  const { toast } = useToast();
 
-  const addListing = (listing: Omit<Listing, "id">) => {
-    const newListing: Listing = {
-      ...listing,
-      id: Date.now().toString(),
-    };
-    setListings((prev) => [...prev, newListing]);
-  };
+  const { toast } = useToast();
 
   const updateListing = (id: string, updatedListing: Partial<Listing>) => {
     setListings((prev) =>
@@ -87,21 +79,11 @@ const CreateListings = () => {
         <div className="mb-8 flex flex-col md:flex-row  items-center md:gap-16">
           <div>
           <h1 className="text-3xl text-gray-900 mb-2 font-extrabold">
-            Create Listings
+            My Listings
           </h1>
           <p className="text-gray-600">
-            Create and manage your product listings before publishing them to
-            the marketplace.
+            Manage your product listings currently live on the marketplace.
           </p>
-          </div>
-          <div className="mb-6">
-            {listings.length > 0 && (
-              <div className="mt-8 flex justify-center">
-                <Button onClick={submitAllListings} size="lg" className="px-8">
-                  Publish All Listings ({listings.length})
-                </Button>
-              </div>
-            )}
           </div>
         </div>
 
@@ -109,8 +91,6 @@ const CreateListings = () => {
           {/* Listings Grid */}
           <div className="xl:col-span-3">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                      <AddListingCard onAddListing={addListing} />
-
               {listings.map((listing) => (
                 <ListingCard
                   key={listing.id}
@@ -127,4 +107,4 @@ const CreateListings = () => {
   );
 };
 
-export default CreateListings;
+export default MyListings;

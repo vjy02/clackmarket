@@ -92,7 +92,7 @@ export const Navbar = () => {
                     <Link href="/profile">Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="hover:cursor-pointer">
-                    <Link href="/settings">My Listings</Link>
+                    <Link href="/listings">My Listings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild className="hover:cursor-pointer">

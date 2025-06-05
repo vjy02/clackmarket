@@ -294,6 +294,32 @@ export default function ProfileSettings({
                   <p className="text-sm text-red-600">{contactError}</p>
                 </div>
               )}
+                              <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                  <p className="text-sm text-blue-600">At least 1 contact information is required apart from your visible username</p>
+                </div>
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="reddit"
+                    className="text-sm font-medium text-slate-700"
+                  >
+                    Visible Username
+                  </Label>
+                  <Input
+                    id="reddit"
+                    value={formData.username || ""}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        username: e.target.value,
+                      }));
+                      if (contactError) setContactError("");
+                    }}
+                    disabled={initialSellerInfo.username ? true : false}
+                    placeholder="username123"
+                    className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                    required={initialSellerInfo.username ? false : true}
+                  />
+                </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">

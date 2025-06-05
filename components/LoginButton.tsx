@@ -1,11 +1,20 @@
-"use client"
+"use client";
 
 import { createClient } from "@/lib/supabase/client";
 
 export const LoginButton = () => {
   const handleLogin = async () => {
     const supabase = createClient();
-    await supabase.auth.signInWithOAuth({ provider: "google" });
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
   };
-  return <button onClick={handleLogin}  className="hover:text-cyan-600">Sign In</button>;
+  return (
+    <button onClick={handleLogin} className="hover:text-cyan-600">
+      Sign In
+    </button>
+  );
 };
