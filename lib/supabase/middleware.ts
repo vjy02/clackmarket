@@ -37,23 +37,27 @@ export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const publicPaths = ["/", "/about", "/search"];
-  const isPublic = publicPaths.includes(pathname) || pathname.startsWith("/auth") || pathname.startsWith("/login");
+  const isPublic = publicPaths.includes(pathname)
+    || pathname.startsWith("/auth")
+    || pathname.startsWith("/login")
+    || pathname.startsWith("/api"); // ADD THIS LINE TO ALLOW API REQUESTS
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // 🟡 Redirect to onboarding if username is missing
-  if (user && !pathname.startsWith("/onboarding")) {
+
+  // Also make sure onboarding redirect excludes API routes
+  if (user && !pathname.startsWith("/onboarding") && !pathname.startsWith("/api")) {
     const { data: profile, error } = await supabase
       .from("users")
       .select("username")
-      .eq("id", user.id)
+      .eq("uuid", user.id)
       .single();
 
-    if (!error && (!profile || !profile.username)) {
+    if (error || !profile) {
       const url = request.nextUrl.clone();
       url.pathname = "/onboarding";
       return NextResponse.redirect(url);

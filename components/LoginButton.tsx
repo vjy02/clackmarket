@@ -1,16 +1,12 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export const LoginButton = () => {
+        const router = useRouter();
+
   const handleLogin = async () => {
-    const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    router.push("/login");
   };
   return (
     <button onClick={handleLogin} className="hover:text-cyan-600">

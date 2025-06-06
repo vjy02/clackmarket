@@ -5,6 +5,7 @@ import { AddListingCard } from "@/components/AddListingCard";
 import { ListingCard } from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/lib/useToast";
+import { ShippingLocation } from "@/components/ProfileSettings";
 
 export interface Listing {
   id: string;
@@ -18,10 +19,10 @@ export interface Listing {
 }
 
 export interface SellerInfo {
-  name: string;
   email: string;
   phone: string;
-  address: string;
+  reddit: string;
+  shippingLocations: ShippingLocation[]
   paymentMethods: string[];
   discord: string;
   username: string;
@@ -29,13 +30,7 @@ export interface SellerInfo {
 
 const CreateListings = () => {
   const [listings, setListings] = useState<Listing[]>([]);
-  const [sellerInfo, setSellerInfo] = useState<SellerInfo>({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Main St, City, State 12345",
-    paymentMethods: ["PayPal", "Bank Transfer"],
-  });
+  const [sellerInfo, setSellerInfo] = useState<SellerInfo>({});
   const { toast } = useToast();
 
   const addListing = (listing: Omit<Listing, "id">) => {
