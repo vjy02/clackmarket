@@ -136,7 +136,7 @@ export const PhotoUpload = ({
 
       {/* Image Previews */}
       {images.length > 0 && (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-6 max-w-md">
           {images.map((image, index) => (
             <div key={index} className="relative group">
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
@@ -157,13 +157,6 @@ export const PhotoUpload = ({
               </Button>
             </div>
           ))}
-        </div>
-      )}
-
-      {images.length === 0 && (
-        <div className="text-center py-4">
-          <Image className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-          <p className="text-sm text-gray-500">No images uploaded</p>
         </div>
       )}
     </div>
