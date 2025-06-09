@@ -15,6 +15,7 @@ export interface Listing {
   images: string[];
   username: string;
   seller_id: string;
+  created_at: string;
 }
 
 const MyListings = () => {

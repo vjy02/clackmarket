@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     // 🔍 Get seller's username using user UUID
     const { data: profile, error: profileError } = await supabase
         .from("users")
-        .select("username")
+        .select("*")
         .eq("uuid", user.id)
         .single();
 
@@ -32,7 +32,8 @@ export async function POST(req: Request) {
         images: listing.images,
         seller_username: profile.username,
         seller_uuid: user.id,
-        product_type: listing.productType,
+        product_type: listing.product_type,
+        shipping_locations: profile.shipping_locations,
     };
 
 

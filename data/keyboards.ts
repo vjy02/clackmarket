@@ -201,4 +201,3 @@ export const keyboards = products.filter(p => p.productType === 'keyboard');
 
 export const countries = [...new Set(products.map(p => p.country))].sort();
 export const brands = [...new Set(products.map(p => p.brand))].sort();
-export const productTypes = ['keyboard', 'switches', 'keycaps', 'accessories'];

@@ -30,7 +30,7 @@ export const AddListingForm = ({ onAddListing }: AddListingFormProps) => {
     name: "",
     price: "",
     description: "",
-    productType: "",
+    product_type: "",
     brand: "",
     condition: "",
     images: [] as File[],
@@ -82,7 +82,7 @@ export const AddListingForm = ({ onAddListing }: AddListingFormProps) => {
       name: formData.name,
       price: priceValue,
       description: formData.description,
-      productType: formData.productType,
+      product_type: formData.product_type,
       brand: formData.brand,
       condition: formData.condition,
       images: formData.images,
@@ -93,7 +93,7 @@ export const AddListingForm = ({ onAddListing }: AddListingFormProps) => {
       name: "",
       price: "",
       description: "",
-      productType: "",
+      product_type: "",
       brand: "",
       condition: "",
       images: [],
@@ -155,11 +155,11 @@ export const AddListingForm = ({ onAddListing }: AddListingFormProps) => {
                   </div>
                     <div className="flex justify-between w-3/5">
                   <div className="space-y-2 w-1/2">
-                    <Label htmlFor="productType" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="product_type" className="text-sm font-medium text-gray-700">
                       Category *
                     </Label>
                     <Select
-                      onValueChange={(value) => setFormData((prev) => ({ ...prev, productType: value }))}
+                      onValueChange={(value) => setFormData((prev) => ({ ...prev, product_type: value }))}
                       required
                     >
                       <SelectTrigger className="h-11">

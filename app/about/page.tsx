@@ -2,11 +2,11 @@ export default function About() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col px-6 py-12">
       <div className="max-w-3xl mx-auto text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-          About ClackMarket
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+          A Mechanical Keyboard Marketplace & r/mechmarket Alternative
         </h1>
         <p className="text-lg text-gray-600 mb-12">
-          A Mechanical Keyboard Marketplace & r/mechmarket Alternative
+          Find your keeb needs in a modern consolidated marketplace.
         </p>
       </div>
 

@@ -10,7 +10,7 @@ export interface Listing {
   name: string;
   price: number;
   description: string;
-  productType: string;
+  product_type: string;
   brand: string;
   condition: string;
   images: File[] | string[];

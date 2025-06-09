@@ -25,12 +25,14 @@ export async function GET() {
     name: listing.title,
     price: listing.price,
     description: listing.description,
-    productType: listing.product_type,
+    product_type: listing.product_type,
     brand: listing.brand,
     condition: listing.condition,
     images: listing.images,
     username: listing.seller_username,
     seller_id: listing.seller_uuid,
+    shipping_locations: listing.shipping_locations,
+    created_at: listing.created_at,
   }));
 
   return NextResponse.json(formatted);

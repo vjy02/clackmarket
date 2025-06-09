@@ -274,8 +274,9 @@ export default function ProfileSettings({
       }
 
       for (const loc of shippingLocations) {
-        if (!loc.isGlobal && (!loc.countryId || !loc.stateId)) {
-          alert("Please complete country and state or mark it as Global.");
+        console.log(loc)
+        if ((!loc.isGlobal && !loc.countryId) || !loc.cost) {
+          alert("Please complete country/global selection and price.");
           return;
         }
       }
@@ -484,6 +485,7 @@ export default function ProfileSettings({
                             Location #{idx + 1}
                           </h4>
                           <Button
+                          type="button"
                             variant="ghost"
                             size="sm"
                             onClick={() => removeShippingLocation(idx)}
@@ -517,47 +519,35 @@ export default function ProfileSettings({
                           </div>
 
                           {!loc.isGlobal && (
-                            <div className="grid md:grid-cols-2 gap-4">
-                              <div className="space-y-2 relative">
-                                <Label className="text-sm font-medium text-slate-700">
-                                  Country
-                                </Label>
-                                <CountrySelect
-                                  onChange={(e) =>
+                            <Select
+                              value={loc.countryId}
+                              onValueChange={(value) =>
                                     updateShippingLocation(
                                       idx,
                                       "countryId",
-                                      e.id
+                                      value
                                     )
                                   }
-                                  defaultValue={loc.countryId}
-                                  placeHolder="Select Country"
-                                  containerClassName="no-border"
-                                  inputClassName="no-border"
-                                />
-                              </div>
-                              {loc.countryId && (
-                                <div className="space-y-2">
-                                  <Label className="text-sm font-medium text-slate-700">
-                                    State/Province
-                                  </Label>
-                                  <StateSelect
-                                    countryid={loc.countryId}
-                                    onChange={(e) =>
-                                      updateShippingLocation(
-                                        idx,
-                                        "stateId",
-                                        e.id
-                                      )
-                                    }
-                                    defaultValue={loc.stateId}
-                                    placeHolder="Select State"
-                                    containerClassName="no-border"
-                                    inputClassName="no-border"
-                                  />
-                                </div>
-                              )}
-                            </div>
+                              
+                            >
+                              <SelectTrigger className="bg-gray-50 border-gray-200 focus:bg-white">
+                                <SelectValue placeholder="Select Region" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                                <SelectItem value="Europe">Europe</SelectItem>
+                                <SelectItem value="Asia">Asia</SelectItem>
+                                <SelectItem value="Oceania">Oceania</SelectItem>
+                                <SelectItem value="United States of America">
+                                  United States of America
+                                </SelectItem>
+                                <SelectItem value="Canada">
+                                  Canada
+                                </SelectItem>
+                                <SelectItem value="South America">
+                                  South America
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
                           )}
 
                           <div className="space-y-2">

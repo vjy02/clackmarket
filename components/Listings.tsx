@@ -1,53 +1,82 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FilterSection } from "@/components/FilterSection";
-import { ProductGrid } from "@/components/ProductGrid";
-import { products } from "@/data/keyboards";
+import { ListingCard } from "./ListingCard";
 
 interface Filters {
-  country: string;
-  priceRange: [number, number];
-  brand: string;
   searchTerm: string;
   productType: string;
+  region: string;
+  isGlobal: boolean;
+  sortBy: string;
 }
+
+const LIMIT = 15;
 
 export const Listings = ({ disableFilters }: { disableFilters: boolean }) => {
   const [filters, setFilters] = useState<Filters>({
-    country: "",
-    priceRange: [0, 1000],
-    brand: "",
     searchTerm: "",
     productType: "",
+    region: "",
+    isGlobal: false,
+    sortBy: "",
   });
 
-  const filteredProducts = products.filter((product) => {
-    const matchesCountry =
-      !filters.country || product.country === filters.country;
-    const matchesPrice =
-      product.price >= filters.priceRange[0] &&
-      product.price <= filters.priceRange[1];
-    const matchesBrand = !filters.brand || product.brand === filters.brand;
-    const matchesProductType =
-      !filters.productType || product.productType === filters.productType;
-    const matchesSearch =
-      !filters.searchTerm ||
-      product.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-      product.brand.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-      product.productType
-        .toLowerCase()
-        .includes(filters.searchTerm.toLowerCase());
+  const [visibleProducts, setVisibleProducts] = useState<any[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-    return (
-      matchesCountry &&
-      matchesPrice &&
-      matchesBrand &&
-      matchesProductType &&
-      matchesSearch
-    );
-  });
+  const fetchListings = async (reset = false, pageNumber = 0) => {
+    const currentPage = reset ? 0 : pageNumber;
+    const params = new URLSearchParams({
+      page: currentPage.toString(),
+      limit: LIMIT.toString(),
+      ...(filters.region && { region: filters.region }),
+      ...(filters.productType && { productType: filters.productType }),
+      ...(filters.searchTerm && { search: filters.searchTerm }),
+      ...(filters.sortBy && { sortBy: filters.sortBy }),
+      ...(filters.isGlobal && { isGlobal: "true" }),
+    });
 
+    setIsFetching(true);
+
+    try {
+      const res = await fetch(`/api/item-fetch?${params.toString()}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        if (reset) {
+          setVisibleProducts(data);
+          setPage(1);
+        } else {
+          setVisibleProducts((prev) => [...prev, ...data]);
+          setPage((prev) => prev + 1);
+        }
+
+        setHasMore(data.length === LIMIT);
+      } else {
+        console.error("Failed to fetch listings", data.error);
+      }
+    } finally {
+      setIsFetching(false);
+      setIsFirstLoad(false); // mark first load done
+    }
+  };
+
+  // Reset page and fetch when filters change
+  useEffect(() => {
+    setPage(0);
+    fetchListings(true, 0);
+  }, [filters]);
+
+  const loadMore = () => {
+    if (!isFetching && hasMore) {
+      fetchListings(false, page);
+    }
+  };
   return (
     <main className="container mx-auto px-4 py-12">
       <div className="flex flex-col lg:flex-row gap-8">
@@ -64,7 +93,32 @@ export const Listings = ({ disableFilters }: { disableFilters: boolean }) => {
               </h2>
             </div>
           )}
-          <ProductGrid products={filteredProducts} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {visibleProducts.map((product) => (
+              <ListingCard
+                key={product.id}
+                listing={product}
+                onDelete={false}
+              />
+            ))}
+          </div>
+          {isFirstLoad ? (
+            <div className="flex justify-center mt-8">
+              <span className="text-gray-600">Loading listings...</span>
+            </div>
+          ) : (
+            hasMore && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={loadMore}
+                  disabled={isFetching}
+                  className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {isFetching ? "Loading..." : "Load More"}
+                </button>
+              </div>
+            )
+          )}
         </div>
       </div>
     </main>
