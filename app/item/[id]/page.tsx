@@ -1,19 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import redditIcon from "@/public/reddit.svg";
+import discordIcon from "@/public/discord.svg";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   MapPin,
   Package,
-  Star,
   User,
   Mail,
   Phone,
@@ -23,7 +23,9 @@ import {
   AlertCircle,
   Share,
   Flag,
+  CircleCheck,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import type { Listing } from "@/types";
 
@@ -32,25 +34,70 @@ export default function ItemPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sellerInfo, setSellerInfo] = useState(null);
   const params = useParams();
   const listingId = params.id as string;
 
+  const handleReport = async () => {
+    try {
+      const url = window.location.href;
+      const res = await fetch("/api/report", {
+        method: "POST",
+        body: JSON.stringify({ listing_id: listingId, url }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) throw new Error("Report failed");
+
+      toast.success("Listing reported.");
+    } catch {
+      toast.error("Could not report listing.");
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied to clipboard.");
+    } catch {
+      toast.error("Failed to copy.");
+    }
+  };
   useEffect(() => {
-    const fetchListing = async () => {
+    const fetchListingAndSeller = async () => {
       try {
         setLoading(true);
+
+        // Fetch the listing
         const res = await fetch(`/api/item-single?id=${listingId}`);
         if (!res.ok) throw new Error("Failed to fetch listing.");
-        const data = await res.json();
-        setListing(data);
+        const listingData = await res.json();
+        setListing(listingData);
+
+        // Fetch the seller using seller_uuid from listing
+        if (listingData?.seller_uuid) {
+          const userRes = await fetch(
+            `/api/seller-fetch?seller_uuid=${listingData.seller_uuid}`
+          );
+          if (!userRes.ok) throw new Error("Failed to fetch user data");
+          const userData = await userRes.json();
+          setSellerInfo(userData);
+        }
       } catch (err) {
-        setError("Failed to load listing. Please try again later.");
+        setError(
+          "Failed to load listing or seller info. Please try again later."
+        );
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (listingId) fetchListing();
+    if (listingId) {
+      fetchListingAndSeller();
+    }
   }, [listingId]);
 
   const formatPrice = (priceInCents: number) =>
@@ -66,22 +113,6 @@ export default function ItemPage() {
       day: "numeric",
     });
 
-  const getConditionColor = (condition: string) => {
-    switch (condition?.toLowerCase()) {
-      case "new":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "like new":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      case "good":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "fair":
-        return "bg-orange-100 text-orange-800 border-orange-200";
-      case "poor":
-        return "bg-red-100 text-red-800 border-red-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -126,7 +157,7 @@ export default function ItemPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
           {/* Image Gallery */}
           <div className="space-y-4">
             <div className="aspect-square rounded-lg overflow-hidden bg-white shadow-sm border">
@@ -138,7 +169,7 @@ export default function ItemPage() {
                 alt={listing.title}
                 width={600}
                 height={600}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
             {listing.images.length > 1 && (
@@ -182,6 +213,7 @@ export default function ItemPage() {
                     size="sm"
                     variant="outline"
                     className="bg-white shadow-sm"
+                    onClick={handleShare}
                   >
                     <Share className="h-4 w-4 mr-2" />
                     Share
@@ -190,6 +222,7 @@ export default function ItemPage() {
                     size="sm"
                     variant="outline"
                     className="bg-white shadow-sm text-red-600 hover:text-red-700 hover:bg-red-50"
+                    onClick={handleReport}
                   >
                     <Flag className="h-4 w-4 mr-2" />
                     Report
@@ -212,28 +245,24 @@ export default function ItemPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex flex-col items-start gap-4 flex-wrap">
               <div className="flex items-center gap-2">
                 <Package className="h-4 w-4 text-gray-500" />
                 <span className="text-sm text-gray-600 font-medium">
                   Brand: {listing.brand}
                 </span>
               </div>
-              <Badge
-                className={`${getConditionColor(
-                  listing.condition
-                )} font-medium`}
-              >
-                {listing.condition}
-              </Badge>
+              <div className="flex items-center gap-2">
+                <CircleCheck className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600 font-medium">
+                  Condition: {listing.condition}
+                </span>
+              </div>
             </div>
 
             <Separator />
 
             <div>
-              <h3 className="font-semibold text-lg mb-3 text-gray-900">
-                Description
-              </h3>
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {listing.description}
               </p>
@@ -250,78 +279,72 @@ export default function ItemPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center gap-3 mb-6">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src="/placeholder-user.jpg" />
-                    <AvatarFallback className="bg-blue-100 text-blue-700 font-semibold">
-                      {listing.seller_username}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-semibold text-gray-900">
-                      {listing.seller_username}
-                    </p>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <Star className="h-4 w-4 fill-gray-200 text-gray-200" />
-                      <span className="text-sm text-gray-500 ml-1 font-medium">
-                        (4.2)
-                      </span>
-                    </div>
-                  </div>
-                </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    variant="outline"
-                    className="justify-start gap-3 h-12"
-                    asChild
-                  >
-                    <a href={`mailto:seller@example.com`}>
+                  {sellerInfo?.email && (
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-3 h-12"
+                      onClick={() => {
+                        navigator.clipboard.writeText(sellerInfo.email);
+                        toast.success("Email copied to clipboard");
+                      }}
+                    >
                       <Mail className="h-4 w-4" />
-                      <span className="truncate">seller@example.com</span>
-                    </a>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="justify-start gap-3 h-12"
-                    asChild
-                  >
-                    <a href={`tel:+1234567890`}>
+                      <span className="truncate">{sellerInfo.email}</span>
+                    </Button>
+                  )}
+                  {sellerInfo?.phone && (
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-3 h-12"
+                      onClick={() => {
+                        navigator.clipboard.writeText(sellerInfo.phone);
+                        toast.success("Phone number copied to clipboard");
+                      }}
+                    >
                       <Phone className="h-4 w-4" />
-                      <span className="truncate">(123) 456-7890</span>
-                    </a>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="justify-start gap-3 h-12"
-                    asChild
-                  >
-                    <a
-                      href={`https://reddit.com/u/seller_username`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      <span className="truncate">{sellerInfo.phone}</span>
+                    </Button>
+                  )}
+                  {sellerInfo?.reddit && (
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-3 h-12"
+                      onClick={() => {
+                        window.open(
+                          `https://reddit.com/message/compose/?to=${sellerInfo.reddit}`,
+                          "_blank"
+                        );
+                      }}
                     >
-                      <MessageCircle className="h-4 w-4" />
-                      <span className="truncate">u/seller_username</span>
-                    </a>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="justify-start gap-3 h-12"
-                    asChild
-                  >
-                    <a
-                      href={`https://discord.com/users/seller_username`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      <Image
+                        src={redditIcon}
+                        height={25}
+                        width={25}
+                        alt="reddit icon"
+                      />
+                      <span className="truncate">u/{sellerInfo.reddit}</span>
+                    </Button>
+                  )}
+                  {sellerInfo?.discord && (
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-3 h-12"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `https://discord.com/users/${sellerInfo.discord}`
+                        );
+                        toast.success("Discord username copied to clipboard");
+                      }}
                     >
-                      <MessageCircle className="h-4 w-4" />
-                      <span className="truncate">seller_username#1234</span>
-                    </a>
-                  </Button>
+                      <Image
+                        src={discordIcon}
+                        height={25}
+                        width={25}
+                        alt="discord icon"
+                      />                      <span className="truncate">{sellerInfo.discord}</span>
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>

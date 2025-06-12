@@ -8,15 +8,7 @@ import {
   useMemo,
   useDeferredValue,
 } from "react";
-import {
-  Plus,
-  Trash2,
-  X,
-  Package,
-  CreditCard,
-  User,
-  MapPin,
-} from "lucide-react";
+import { Plus, Trash2, X, Package, CreditCard, User, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -274,8 +266,7 @@ export default function ProfileSettings({
       }
 
       for (const loc of shippingLocations) {
-        console.log(loc)
-        if ((!loc.isGlobal && !loc.countryId) || !loc.cost) {
+        if (!loc.isGlobal && !loc.countryId && !loc.cost) {
           alert("Please complete country/global selection and price.");
           return;
         }
@@ -310,374 +301,381 @@ export default function ProfileSettings({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-4xl mx-auto">
+    <div className=" h-fit">
+      <div className=" md:w-10/12 mx-auto -mt-3">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Contact Information Card */}
-          <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-3 text-lg">
-                <User className="w-5 h-5 text-cyan-600" />
-                Contact Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {contactError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-                  <p className="text-sm text-red-600">{contactError}</p>
-                </div>
-              )}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="username"
-                  className="text-sm font-medium text-slate-700"
-                >
-                  Visible Username
-                </Label>
-                <Input
-                  id="username"
-                  value={immediateInputs.username}
-                  onChange={(e) =>
-                    handleImmediateInputChange("username", e.target.value)
-                  }
-                  disabled={!!initialSellerInfo.username}
-                  placeholder="username123"
-                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
-                  required={!initialSellerInfo.username}
-                />
-              </div>
+  {/* Mobile: All cards stacked vertically, Desktop: Two column layout */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    {/* Left Column - Contact Info and Payment Methods */}
+    <div className="space-y-6">
+      {/* Contact Information Card */}
+      <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-lg">
+            <User className="w-5 h-5 text-cyan-600" />
+            Contact Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {contactError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-sm text-red-600">{contactError}</p>
+            </div>
+          )}
+          <div className="space-y-2">
+            <Label
+              htmlFor="username"
+              className="text-sm font-medium text-slate-700"
+            >
+              Visible Username
+            </Label>
+            <Input
+              id="username"
+              value={immediateInputs.username}
+              onChange={(e) =>
+                handleImmediateInputChange("username", e.target.value)
+              }
+              disabled={!!initialSellerInfo.username}
+              placeholder="username123"
+              className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+              required={!initialSellerInfo.username}
+            />
+          </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="email"
-                    className="text-sm font-medium text-slate-700"
-                  >
-                    Email Address
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={immediateInputs.email}
-                    onChange={(e) =>
-                      handleImmediateInputChange("email", e.target.value)
-                    }
-                    placeholder="you@example.com"
-                    className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="phone"
-                    className="text-sm font-medium text-slate-700"
-                  >
-                    Phone Number
-                  </Label>
-                  <div className="flex gap-2">
-                    <div className="w-1/3">
-                      <Select
-                        value={countryCode}
-                        onValueChange={setCountryCode}
-                      >
-                        <SelectTrigger className="w-full border-slate-200 focus:border-blue-500 focus:ring-blue-500">
-                          <SelectValue>
-                            {countryCode.split("-")[0] || "+1"}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent className="max-h-[240px]">
-                          {countryOptions.map((country) => (
-                            <SelectItem
-                              key={country.key}
-                              value={`${country.code}-${country.key}`}
-                            >
-                              {country.name + ": " + country.code}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="w-2/3">
-                      <Input
-                        id="phone"
-                        type="tel"
-                        value={phoneNumber}
-                        onChange={(e) =>
-                          handlePhoneNumberChange(e.target.value)
-                        }
-                        placeholder="Phone number"
-                        className={`border-slate-200 focus:border-blue-500 focus:ring-blue-500 ${
-                          phoneError
-                            ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                            : ""
-                        }`}
-                      />
-                    </div>
-                  </div>
-                  {phoneError && (
-                    <p className="text-sm text-red-600">{phoneError}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="reddit"
-                    className="text-sm font-medium text-slate-700"
-                  >
-                    Reddit Username
-                  </Label>
-                  <Input
-                    id="reddit"
-                    value={immediateInputs.reddit}
-                    onChange={(e) =>
-                      handleImmediateInputChange("reddit", e.target.value)
-                    }
-                    placeholder="u/username"
-                    className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="discord"
-                    className="text-sm font-medium text-slate-700"
-                  >
-                    Discord Username
-                  </Label>
-                  <Input
-                    id="discord"
-                    value={immediateInputs.discord}
-                    onChange={(e) =>
-                      handleImmediateInputChange("discord", e.target.value)
-                    }
-                    placeholder="yourname#1234"
-                    className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Shipping Locations Card */}
-          <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-3 text-lg">
-                <Package className="w-5 h-5 text-cyan-600" />
-                Shipping Locations
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {shippingLocations.length === 0 ? (
-                <div className="text-center py-8 text-slate-500">
-                  <MapPin className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                  <p>No shipping locations added yet</p>
-                  <p className="text-sm">
-                    Add your first shipping location to get started
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {shippingLocations.map((loc, idx) => (
-                    <Card key={idx} className="border border-slate-200">
-                      <CardContent className="p-4">
-                        <div className="flex justify-between items-start mb-4">
-                          <h4 className="font-medium text-slate-900">
-                            Location #{idx + 1}
-                          </h4>
-                          <Button
-                          type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeShippingLocation(idx)}
-                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-3">
-                            <input
-                              type="checkbox"
-                              id={`global-${idx}`}
-                              checked={loc.isGlobal || false}
-                              onChange={(e) =>
-                                updateShippingLocation(
-                                  idx,
-                                  "isGlobal",
-                                  e.target.checked
-                                )
-                              }
-                              className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
-                            />
-                            <Label
-                              htmlFor={`global-${idx}`}
-                              className="text-sm font-medium text-slate-700"
-                            >
-                              Global Shipping (Worldwide)
-                            </Label>
-                          </div>
-
-                          {!loc.isGlobal && (
-                            <Select
-                              value={loc.countryId}
-                              onValueChange={(value) =>
-                                    updateShippingLocation(
-                                      idx,
-                                      "countryId",
-                                      value
-                                    )
-                                  }
-                              
-                            >
-                              <SelectTrigger className="bg-gray-50 border-gray-200 focus:bg-white">
-                                <SelectValue placeholder="Select Region" />
-                              </SelectTrigger>
-                              <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                                <SelectItem value="Europe">Europe</SelectItem>
-                                <SelectItem value="Asia">Asia</SelectItem>
-                                <SelectItem value="Oceania">Oceania</SelectItem>
-                                <SelectItem value="United States of America">
-                                  United States of America
-                                </SelectItem>
-                                <SelectItem value="Canada">
-                                  Canada
-                                </SelectItem>
-                                <SelectItem value="South America">
-                                  South America
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          )}
-
-                          <div className="space-y-2">
-                            <Label className="text-sm font-medium text-slate-700">
-                              Shipping Cost (USD)
-                            </Label>
-                            <Input
-                              placeholder="$0.00"
-                              value={loc.cost}
-                              onChange={(e) =>
-                                updateShippingLocation(
-                                  idx,
-                                  "cost",
-                                  e.target.value
-                                )
-                              }
-                              className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
-                            />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-
-              <Button
-                onClick={addShippingLocation}
-                variant="outline"
-                type="button"
-                className="w-full border-dashed border-2 border-slate-300 hover:border-slate-400 hover:bg-slate-50"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label
+                htmlFor="email"
+                className="text-sm font-medium text-slate-700"
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Shipping Location
-              </Button>
-            </CardContent>
-          </Card>
+                Email Address
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={immediateInputs.email}
+                onChange={(e) =>
+                  handleImmediateInputChange("email", e.target.value)
+                }
+                placeholder="you@example.com"
+                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          {/* Payment Methods Card */}
-          <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-3 text-lg">
-                <CreditCard className="w-5 h-5 text-cyan-600" />
-                Payment Methods
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {formData?.paymentMethods?.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {formData.paymentMethods.map((method, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className="flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    >
-                      {method}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removePaymentMethod(index)}
-                        className="h-auto p-0 hover:bg-transparent text-slate-500 hover:text-red-500"
-                      >
-                        <X className="w-3 h-3" />
-                      </Button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-
+            <div className="space-y-2">
+              <Label
+                htmlFor="phone"
+                className="text-sm font-medium text-slate-700"
+              >
+                Phone Number
+              </Label>
               <div className="flex gap-2">
-                <div className="flex-1">
+                <div className="w-1/3">
                   <Select
-                    value={selectedPaymentMethod}
-                    onValueChange={setSelectedPaymentMethod}
+                    value={countryCode}
+                    onValueChange={setCountryCode}
                   >
                     <SelectTrigger className="w-full border-slate-200 focus:border-blue-500 focus:ring-blue-500">
-                      <SelectValue placeholder="Select payment method" />
+                      <SelectValue>
+                        {countryCode.split("-")[0] || "+1"}
+                      </SelectValue>
                     </SelectTrigger>
-                    <SelectContent className="z-50">
-                      {availablePaymentMethods.length > 0 ? (
-                        availablePaymentMethods.map((method) => (
-                          <SelectItem key={method.id} value={method.id}>
-                            {method.name}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value="none" disabled>
-                          All payment methods added
+                    <SelectContent className="max-h-[240px]">
+                      {countryOptions.map((country) => (
+                        <SelectItem
+                          key={country.key}
+                          value={`${country.code}-${country.key}`}
+                        >
+                          {country.name + ": " + country.code}
                         </SelectItem>
-                      )}
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <Button
-                  onClick={addPaymentMethod}
-                  type="button"
-                  variant="outline"
-                  className="border-slate-200 hover:bg-slate-50"
-                  disabled={
-                    !selectedPaymentMethod ||
-                    availablePaymentMethods.length === 0
-                  }
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-
-              {formData?.paymentMethods?.length === 0 && (
-                <div className="text-center py-6 text-slate-500">
-                  <CreditCard className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                  <p>No payment methods added yet</p>
-                  <p className="text-sm">
-                    Select payment methods your customers can use
-                  </p>
+                <div className="w-2/3">
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) =>
+                      handlePhoneNumberChange(e.target.value)
+                    }
+                    placeholder="Phone number"
+                    className={`border-slate-200 focus:border-blue-500 focus:ring-blue-500 ${
+                      phoneError
+                        ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                        : ""
+                    }`}
+                  />
                 </div>
+              </div>
+              {phoneError && (
+                <p className="text-sm text-red-600">{phoneError}</p>
               )}
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Action Buttons */}
+            <div className="space-y-2">
+              <Label
+                htmlFor="reddit"
+                className="text-sm font-medium text-slate-700"
+              >
+                Reddit Username
+              </Label>
+              <Input
+                id="reddit"
+                value={immediateInputs.reddit}
+                onChange={(e) =>
+                  handleImmediateInputChange("reddit", e.target.value)
+                }
+                placeholder="username"
+                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
+            <div className="space-y-2">
+              <Label
+                htmlFor="discord"
+                className="text-sm font-medium text-slate-700"
+              >
+                Discord Username
+              </Label>
+              <Input
+                id="discord"
+                value={immediateInputs.discord}
+                onChange={(e) =>
+                  handleImmediateInputChange("discord", e.target.value)
+                }
+                placeholder="yourname#1234"
+                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Payment Methods Card */}
+      <Card className="shadow-sm border bg-white/70 backdrop-blur-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-lg">
+            <CreditCard className="w-5 h-5 text-cyan-600" />
+            Payment Methods
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {formData?.paymentMethods?.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {formData.paymentMethods.map((method, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200"
+                >
+                  {method}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removePaymentMethod(index)}
+                    className="h-auto p-0 hover:bg-transparent text-slate-500 hover:text-red-500"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </Badge>
+              ))}
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Select
+                value={selectedPaymentMethod}
+                onValueChange={setSelectedPaymentMethod}
+              >
+                <SelectTrigger className="w-full border-slate-200 focus:border-blue-500 focus:ring-blue-500">
+                  <SelectValue placeholder="Select payment method" />
+                </SelectTrigger>
+                <SelectContent className="z-50">
+                  {availablePaymentMethods.length > 0 ? (
+                    availablePaymentMethods.map((method) => (
+                      <SelectItem key={method.id} value={method.id}>
+                        {method.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="none" disabled>
+                      All payment methods added
+                    </SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
             <Button
-              type="submit"
-              className="bg-cyan-600 hover:bg-cyan-700 text-white h-11 px-8"
+              onClick={addPaymentMethod}
+              type="button"
+              variant="outline"
+              className="border-slate-200 hover:bg-slate-50"
+              disabled={
+                !selectedPaymentMethod ||
+                availablePaymentMethods.length === 0
+              }
             >
-              Save Details
+              <Plus className="w-4 h-4" />
             </Button>
           </div>
-        </form>
+
+          {formData?.paymentMethods?.length === 0 && (
+            <div className="text-center py-6 text-slate-500">
+              <CreditCard className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <p>No payment methods added yet</p>
+              <p className="text-sm">
+                Select payment methods your customers can use
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+
+    {/* Right Column - Shipping Locations */}
+    <div className="space-y-6">
+      <Card className="shadow-sm border bg-white/70 backdrop-blur-sm h-fit">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-lg">
+            <Package className="w-5 h-5 text-cyan-600" />
+            Shipping Locations
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {shippingLocations.length === 0 ? (
+            <div className="text-center py-8 text-slate-500">
+              <MapPin className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <p>No shipping locations added yet</p>
+              <p className="text-sm">
+                Add your first shipping location to get started
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {shippingLocations.map((loc, idx) => (
+                <Card key={idx} className="border border-slate-200">
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-4">
+                      <h4 className="font-medium text-slate-900">
+                        Location #{idx + 1}
+                      </h4>
+                      <Button
+                      type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeShippingLocation(idx)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          id={`global-${idx}`}
+                          checked={loc.isGlobal || false}
+                          onChange={(e) =>
+                            updateShippingLocation(
+                              idx,
+                              "isGlobal",
+                              e.target.checked
+                            )
+                          }
+                          className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                        />
+                        <Label
+                          htmlFor={`global-${idx}`}
+                          className="text-sm font-medium text-slate-700"
+                        >
+                          Global Shipping (Worldwide)
+                        </Label>
+                      </div>
+
+                      {!loc.isGlobal && (
+                        <Select
+                          value={loc.countryId}
+                          onValueChange={(value) =>
+                                updateShippingLocation(
+                                  idx,
+                                  "countryId",
+                                  value
+                                )
+                              }
+                          
+                        >
+                          <SelectTrigger className="bg-gray-50 border-gray-200 focus:bg-white">
+                            <SelectValue placeholder="Select Region" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                            <SelectItem value="Europe">Europe</SelectItem>
+                            <SelectItem value="Asia">Asia</SelectItem>
+                            <SelectItem value="Oceania">Oceania</SelectItem>
+                            <SelectItem value="United States of America">
+                              United States of America
+                            </SelectItem>
+                            <SelectItem value="Canada">
+                              Canada
+                            </SelectItem>
+                            <SelectItem value="South America">
+                              South America
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-slate-700">
+                          Shipping Cost (USD)
+                        </Label>
+                        <Input
+                          placeholder="$0.00"
+                          value={loc.cost}
+                          onChange={(e) =>
+                            updateShippingLocation(
+                              idx,
+                              "cost",
+                              e.target.value
+                            )
+                          }
+                          className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          <Button
+            onClick={addShippingLocation}
+            variant="outline"
+            type="button"
+            className="w-full border-dashed border-2 border-slate-300 hover:border-slate-400 hover:bg-slate-50"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Shipping Location
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  </div>
+
+  {/* Action Buttons */}
+  <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
+    <Button
+      type="submit"
+      className="bg-cyan-600 hover:bg-cyan-700 text-white h-11 px-8"
+    >
+      Save Details
+    </Button>
+  </div>
+</form>
       </div>
     </div>
   );

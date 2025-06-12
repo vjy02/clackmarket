@@ -58,7 +58,7 @@ export const FilterSection = ({ filters, setFilters }: FilterSectionProps) => {
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold  flex gap-2 items-center">
-            <FilterIcon className="h-5 text-blue-600" />
+            <FilterIcon className="h-5 " />
             Filters
           </CardTitle>
           {hasActiveFilters && (
@@ -181,7 +181,7 @@ export const FilterSection = ({ filters, setFilters }: FilterSectionProps) => {
         </div>
 
         {/* Global Shipping */}
-        <div>
+        {/* <div>
           <div className="flex items-center space-x-2">
             <Checkbox
               id="isGlobal"
@@ -198,7 +198,7 @@ export const FilterSection = ({ filters, setFilters }: FilterSectionProps) => {
               Global shipping available
             </label>
           </div>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

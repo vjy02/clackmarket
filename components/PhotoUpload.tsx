@@ -96,9 +96,9 @@ export const PhotoUpload = ({
   return (
     <div className="space-y-4">
       {/* Upload Area */}
-      {images.length < maxImages && (
+      {images.length < maxImages && (<div>
         <div
-          className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+          className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors flex flex-col items-center h-32 ${
             isDragOver 
               ? 'border-blue-400 bg-blue-50' 
               : 'border-gray-300 hover:border-gray-400'
@@ -107,10 +107,7 @@ export const PhotoUpload = ({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-          <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-sm text-gray-600 mb-2">
-            Drag and drop images here, or click to select
-          </p>
+          <Upload className="w-6 h-6 text-gray-400 mx-auto mb-2" />
           <p className="text-xs text-gray-400">
             Max {maxImages} images, {maxSizeMB}MB each
           </p>
@@ -132,6 +129,10 @@ export const PhotoUpload = ({
             Select Images
           </Button>
         </div>
+                          <p className="text-xs text-gray-500 mt-2">
+                    Upload up to 3 high-quality images. First image will be used as the main photo.
+                  </p>
+                  </div>
       )}
 
       {/* Image Previews */}

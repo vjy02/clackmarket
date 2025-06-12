@@ -40,6 +40,9 @@ export async function updateSession(request: NextRequest) {
   const isPublic = publicPaths.includes(pathname)
     || pathname.startsWith("/auth")
     || pathname.startsWith("/login")
+    || pathname.startsWith("/privacy")
+    || pathname.startsWith("/terms")
+    || pathname.startsWith("/item")
     || pathname.startsWith("/api"); // ADD THIS LINE TO ALLOW API REQUESTS
 
   if (!user && !isPublic) {

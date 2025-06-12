@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import ProfileSettings from "@/components/ProfileSettings";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Profile() {
   const [sellerInfo, setSellerInfo] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -17,6 +19,7 @@ export default function Profile() {
         setSellerInfo(user);
       } catch (error) {
         console.error("Error fetching user:", error);
+        toast.error("Failed to load user info");
       } finally {
         setLoading(false);
       }
@@ -25,11 +28,10 @@ export default function Profile() {
     fetchUser();
   }, []);
 
-  if (loading) return <div className="p-6">Loading user info...</div>;
-  if (!sellerInfo) return <div className="p-6">No user info found.</div>;
+  if (loading) return <div className="pt-12 flex justify-center text-gray-600 min-h-screen">Loading user info...</div>;
+  if (!sellerInfo) return <div className="p-6 min-h-screen">No user info found.</div>;
 
-  const onSubmit = async (formData: typeof initSeller) => {
-    console.log("PATCH")
+  const onSubmit = async (formData: typeof sellerInfo) => {
     try {
       const response = await fetch("/api/user-fetch", {
         method: "PATCH",
@@ -40,18 +42,19 @@ export default function Profile() {
       });
       const json = await response.json();
       if (response.ok) {
-        console.log("User updated successfully");
+        toast.success("User updated successfully");
         router.push("/profile");
       } else {
+        toast.error(json.error || "Failed to update user");
         console.error("Failed to update user:", json.error);
       }
     } catch (err) {
+      toast.error("Error submitting form");
       console.error("Error submitting form:", err);
     }
   };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col px-6 py-12">
+    <div className="flex flex-col px-6 py-12 h-full">
       <ProfileSettings initialSellerInfo={sellerInfo} onSubmit={onSubmit} />
     </div>
   );

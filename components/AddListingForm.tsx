@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Info, CircleDollarSign, Text, ImageIcon } from "lucide-react"
+import { Info, CircleDollarSign, ImageIcon } from "lucide-react"
+import { PlusCircle } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { PhotoUpload } from "@/components/PhotoUpload"
@@ -102,7 +103,7 @@ export const AddListingForm = ({ onAddListing }: AddListingFormProps) => {
 
   return (
     <Card className="bg-white shadow-lg border border-gray-200 min-w-max">
-      <CardContent className="px-6 py-6 max-w-[80vw]">
+      <CardContent className="px-6 py-5 max-w-[80vw]">
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Left Column */}
@@ -284,9 +285,6 @@ export const AddListingForm = ({ onAddListing }: AddListingFormProps) => {
                     maxImages={3}
                     maxSizeMB={5}
                   />
-                  <p className="text-xs text-gray-500">
-                    Upload up to 3 high-quality images. First image will be used as the main photo.
-                  </p>
                   {errors.images && (
                     <p className="text-sm text-red-600 flex items-center gap-1">
                       <span className="text-red-500">•</span>
@@ -299,9 +297,12 @@ export const AddListingForm = ({ onAddListing }: AddListingFormProps) => {
           </div>
 
           {/* Action Buttons */}
-              <Button type="submit" className="h-11 px-8 order-1 sm:order-2 bg-purple-600 hover:bg-purple-700 absolute bottom-5 right-0 md:bottom-auto md:top-10 md:right-6">
-                Create Listing
-              </Button>
+<div className="flex justify-end">
+  <Button type="submit" className="h-11 px-8 bg-purple-600 hover:bg-purple-700">
+                  <PlusCircle className="h-4 w-4" />
+    Create Listing
+  </Button>
+</div>
         </form>
       </CardContent>
     </Card>

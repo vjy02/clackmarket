@@ -38,7 +38,7 @@ export const Hero = () => {
               onClick={() => {
                 router.push("/list");
               }}
-              className="w-48 bg-purple-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-purple-700 transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-36 text-xs md:text-md md:w-48 bg-purple-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-purple-700 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Upload className="w-5 h-5" />
               List your item
@@ -49,7 +49,7 @@ export const Hero = () => {
               onClick={() => {
                 router.push("/search");
               }}
-              className="w-48 bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-36 text-xs md:text-md md:w-48 bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Search className="w-5 h-5" />
               Find an item

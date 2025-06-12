@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col px-6 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col px-6 py-12 pb-24">
       <div className="max-w-3xl mx-auto text-center">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
           A Mechanical Keyboard Marketplace & r/mechmarket Alternative

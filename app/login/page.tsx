@@ -1,48 +1,55 @@
-"use client"
+"use client";
 
-import { createBrowserClient } from "@supabase/ssr"
-import { useState } from "react"
-import { AlertCircle } from "lucide-react"
+import { createBrowserClient } from "@supabase/ssr";
+import { useState } from "react";
+import { AlertCircle } from "lucide-react";
+import keycapImg from "@/public/money.png";
+import Image from "next/image";
 
 export default function Login() {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  )
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
-      })
+      });
 
       if (error) {
-        setError(error.message)
+        setError(error.message);
       }
     } catch (err) {
-      setError("An unexpected error occurred")
-      console.error(err)
+      setError("An unexpected error occurred");
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
       <div className="w-full max-w-md transform overflow-hidden rounded-xl bg-white p-8 shadow-xl transition-all">
-        <div className="space-y-6">
-          <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 mb-6">Welcome Back</h1>
-            <p className="text-sm text-gray-500">Sign in to access the ClackMarket seller space</p>
+        <div className="space-y-6 mb-16">
+          <div className="space-y-2 text-center flex flex-col items-center">
+            <Image src={keycapImg} height={200} width={200} alt="keycap img" />
+            <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 mb-6">
+              Welcome Back
+            </h1>
+            <p className="text-sm text-gray-500">
+              Sign in to access the ClackMarket seller space
+            </p>
           </div>
 
           {error && (
@@ -58,7 +65,11 @@ export default function Login() {
             className="relative flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {!loading && (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="h-5 w-5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 48 48"
+                className="h-5 w-5"
+              >
                 <path
                   fill="#FFC107"
                   d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
@@ -86,8 +97,19 @@ export default function Login() {
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  />
                 </svg>
                 <span>Signing in...</span>
               </div>
@@ -98,5 +120,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  )
+  );
 }

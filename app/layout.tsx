@@ -3,6 +3,8 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -52,7 +54,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased `}>
+      <body className={`${geistSans.className} antialiased bg-slate-50`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -61,6 +63,8 @@ export default function RootLayout({
         >
           <Navbar />
           {children}
+          <Toaster richColors />
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
