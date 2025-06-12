@@ -56,6 +56,7 @@ export const Navbar = () => {
               <h1 className="text-2xl font-bold font-mono">ClackMarket</h1>
             </div>
           </Link>
+          
           <nav className="hidden md:flex space-x-6 items-center text-sm text-gray-700">
             <Link
               href="/"
@@ -75,8 +76,8 @@ export const Navbar = () => {
             >
               Search
             </Link>
-            {isAuthChecked ? (
-              user ? (
+
+             { user ? (
                 <>
                   <Link
                     href="/list"
@@ -124,9 +125,7 @@ export const Navbar = () => {
               ) : (
                 <LoginButton />
               )
-            ) : (
-              <CircleUser className="h-6 w-6 text-gray-700" />
-            )}
+            }
           </nav>
         </div>
       </div>
